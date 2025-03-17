@@ -15,8 +15,33 @@ var cors = require('cors')
 const app = express()
 app.use(cors())
 
+
+var mysql = require('mysql2');
+
+var con = mysql.createConnection({
+host: "localhost",
+user: "root",
+password: "hipal123",
+database: "HiPal"});
+
+var sql = "select * from tblPoints;"
+//var sql = "show databases;";
+var locationTest;
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log(result);
+    locationTest = result;
+  });
+});
+
+
 app.get('/', (req, res) => {
-  res.send('Hello Moto')
+ // res.send('Hello Moto')
+ res.send(locationTest);
 })
 
 app.listen(port, () => {
