@@ -3,3 +3,5 @@
 # dependencies
 node_modules/
 .vscode/
+ReactNative/.DS_Store
+DB Backups/.DS_Store
