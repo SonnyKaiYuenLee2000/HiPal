@@ -5,6 +5,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import React, { useEffect, useState } from 'react';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks'
 
 export default function HomeScreen() {
     const [isLoading, setLoading] = useState(true);
@@ -21,6 +22,7 @@ export default function HomeScreen() {
         }
     }
     const FirstContact = () => { getContact(); }
+    const accountName = useAppSelector((state) => state.account.name)
     return (
         <ParallaxScrollView
             headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -31,7 +33,7 @@ export default function HomeScreen() {
                 />
             }>
             <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">Welcome!</ThemedText>
+                <ThemedText type="title">Welcome, {accountName}!</ThemedText>
                 <HelloWave />
                 <Button
                     onPress={FirstContact}
