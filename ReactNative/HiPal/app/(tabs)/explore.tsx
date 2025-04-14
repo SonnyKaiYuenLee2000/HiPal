@@ -1,5 +1,6 @@
-import { StyleSheet, Image, Platform, View } from 'react-native';
+import { StyleSheet, Image, Platform, View, Modal, TouchableOpacity, Text } from 'react-native';
 import { GoogleMap, Marker, MarkerProps, useJsApiLoader } from '@react-google-maps/api'
+import { ThemedText } from '../../components/ThemedText';
 import { useState, useCallback, useEffect } from 'react';
 
 const center = {
@@ -28,6 +29,7 @@ export default function TabTwoScreen() {
   const [map, setMap] = useState<google.maps.Map|null>(null)
   const [listData, setData] = useState<baseLocationPoint[]>([])
   const [isLoading, setLoading] = useState(true)
+  const [selectedPoint, setSelectedPoint] = useState<baseLocationPoint|null>(null)
 
   const getContact = async () => {
     try {
@@ -85,6 +87,7 @@ const containerStyle = {
                 lat: item.pntLatLong.x,
                 lng: item.pntLatLong.y
               }}
+              onClick={() => setSelectedPoint(item)}
             />
           ))}
         </GoogleMap>
@@ -94,6 +97,27 @@ const containerStyle = {
   return (
     <View style={{ flex: 1 }}>
       {renderMap()}
+      
+      <Modal
+        visible={!!selectedPoint}
+        transparent={true}
+        onRequestClose={() => setSelectedPoint(null)}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
+            <ThemedText type="title">{selectedPoint?.strTitle}</ThemedText>
+            <ThemedText>{selectedPoint?.strAddress}</ThemedText>
+            <ThemedText>{selectedPoint?.strDescription}</ThemedText>
+            
+            <TouchableOpacity 
+              onPress={() => setSelectedPoint(null)}
+              style={{ marginTop: 15, padding: 10, backgroundColor: '#007bff', borderRadius: 5 }}
+            >
+              <Text style={{ color: 'white', textAlign: 'center' }}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
