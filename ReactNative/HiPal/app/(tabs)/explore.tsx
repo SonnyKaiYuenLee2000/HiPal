@@ -1,11 +1,5 @@
-import { StyleSheet, Image, Platform} from 'react-native';
+import { StyleSheet, Image, Platform, View } from 'react-native';
 import { GoogleMap, Marker, MarkerProps, useJsApiLoader } from '@react-google-maps/api'
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useState, useCallback, useEffect } from 'react';
 
 const center = {
@@ -51,10 +45,9 @@ export default function TabTwoScreen() {
     getContact()
   }, [])
 
-  const containerStyle = {
-    width: '400px',
-    height: '400px',
-  }
+const containerStyle = {
+  flex: 1,
+}
   
   const onLoad = useCallback(function callback(map:google.maps.Map) {
     // Calculate bounds based on fetched data
@@ -75,57 +68,34 @@ export default function TabTwoScreen() {
     setMap(null)
   }, [])
 
-  const renderMap = ()=>{
-    return isLoaded ? <GoogleMap
-    mapContainerStyle={containerStyle}
-    center={center}
-    zoom={10}
-    onLoad={onLoad}
-    onUnmount={onUnmount}
-  >
-    {/* Child components, such as markers, info windows, etc. */}
-    {listData.map((item) => (
-      <Marker
-        key={item.lngPointKey}
-        position={{
-          lat: item.pntLatLong.x,
-          lng: item.pntLatLong.y
-        }}
-      />
-    ))}
-  </GoogleMap> : <></>
+  const renderMap = () => {
+    return isLoaded ? (
+      <View style={{ flex: 1 }}>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={10}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
+        >
+          {listData.map((item) => (
+            <Marker
+              key={item.lngPointKey}
+              position={{
+                lat: item.pntLatLong.x,
+                lng: item.pntLatLong.y
+              }}
+            />
+          ))}
+        </GoogleMap>
+      </View>
+    ) : <></>;
   }
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      {
-        renderMap()
-      }
-    </ParallaxScrollView>
+    <View style={{ flex: 1 }}>
+      {renderMap()}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});
+const styles = StyleSheet.create({});
