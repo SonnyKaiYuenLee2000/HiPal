@@ -105,16 +105,24 @@ const containerStyle = {
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
-            <ThemedText type="title">{selectedPoint?.strTitle}</ThemedText>
-            <ThemedText>{selectedPoint?.strAddress}</ThemedText>
-            <ThemedText>{selectedPoint?.strDescription}</ThemedText>
+            <ThemedText type="title" style={{ color: '#111', marginBottom: 12 }}>{selectedPoint?.strTitle}</ThemedText>
+            <ThemedText style={{ color: '#333', marginTop: 8 }}>{selectedPoint?.strAddress}</ThemedText>
+            <ThemedText style={{ color: '#333', marginTop: 8 }}>{selectedPoint?.strDescription}</ThemedText>
             
-            <TouchableOpacity 
-              onPress={() => setSelectedPoint(null)}
-              style={{ marginTop: 15, padding: 10, backgroundColor: '#007bff', borderRadius: 5 }}
-            >
-              <Text style={{ color: 'white', textAlign: 'center' }}>Close</Text>
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', gap: 10, marginTop: 15 }}>
+              <TouchableOpacity 
+                onPress={() => alert('Change functionality not implemented yet')}
+                style={{ flex: 1, padding: 10, backgroundColor: '#28a745', borderRadius: 5 }}
+              >
+                <Text style={{ color: 'white', textAlign: 'center' }}>Change</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => setSelectedPoint(null)}
+                style={{ flex: 1, padding: 10, backgroundColor: '#007bff', borderRadius: 5 }}
+              >
+                <Text style={{ color: 'white', textAlign: 'center' }}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
