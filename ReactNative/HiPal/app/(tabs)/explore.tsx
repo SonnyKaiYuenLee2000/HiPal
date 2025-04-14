@@ -6,16 +6,22 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const center = {
   lat: 21.289965,
   lng: -157.8544448,
 }
 
-const markerPosition = {
-  lat: 21.292008,
-  lng:-157.8479726,
+interface baseLocationPoint {
+  "lngPointKey" : number
+  "strAddress" : string
+  "strTitle" : string
+  "strDescription" : string
+  "pntLatLong" : {
+      "x" : number
+      "y" : number
+  }
 }
 
 
@@ -26,6 +32,24 @@ export default function TabTwoScreen() {
   })
 
   const [map, setMap] = useState<google.maps.Map|null>(null)
+  const [listData, setData] = useState<baseLocationPoint[]>([])
+  const [isLoading, setLoading] = useState(true)
+
+  const getContact = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:3006/')
+      const json = await response.json()
+      setData(json)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getContact()
+  }, [])
 
   const containerStyle = {
     width: '400px',
@@ -33,13 +57,19 @@ export default function TabTwoScreen() {
   }
   
   const onLoad = useCallback(function callback(map:google.maps.Map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    const bothBounds = new google.maps.LatLngBounds(center, markerPosition)
-    const bounds = new window.google.maps.LatLngBounds(bothBounds)
-    map.fitBounds(bounds)
-
+    // Calculate bounds based on fetched data
+    const bounds = new window.google.maps.LatLngBounds()
+    listData.forEach(item => {
+      bounds.extend(new google.maps.LatLng(
+        item.pntLatLong.x,
+        item.pntLatLong.y
+      ))
+    })
+    if (!bounds.isEmpty()) {
+      map.fitBounds(bounds)
+    }
     setMap(map)
-  }, [])
+  }, [listData])
 
   const onUnmount = useCallback(function callback(map:google.maps.Map) {
     setMap(null)
@@ -54,11 +84,15 @@ export default function TabTwoScreen() {
     onUnmount={onUnmount}
   >
     {/* Child components, such as markers, info windows, etc. */}
-    <Marker
-    position = { {
-      lat: 21.292008,
-      lng:-157.8479726,
-    }}/>
+    {listData.map((item) => (
+      <Marker
+        key={item.lngPointKey}
+        position={{
+          lat: item.pntLatLong.x,
+          lng: item.pntLatLong.y
+        }}
+      />
+    ))}
   </GoogleMap> : <></>
   }
   return (

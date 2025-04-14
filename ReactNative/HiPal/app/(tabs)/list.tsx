@@ -25,7 +25,7 @@ export default function TabThreeScreen() {
 
     const getContact = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:3000/');
+            const response = await fetch('http://127.0.0.1:3006/');
             const json = await response.json();
             setData(json);
         } catch (error) {
